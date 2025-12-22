@@ -41,6 +41,7 @@
                 <label class="font-medium">Nama Pegawai *</label>
                 <select name="pegawai[nama]" class="w-full mt-2 rounded-lg border-gray-300">
                     <option value="">Pilih Pegawai</option>
+                    <option>El-Gibrane Uraka</option>
                 </select>
             </div>
 
@@ -148,20 +149,21 @@
 
             <div class="mb-4">
                 <label class="font-medium">Nama PPTK</label>
-                <select name="pptk[nama]" class="w-full mt-2 rounded-lg border-gray-300">
+                <select name="pptk" class="w-full mt-2 rounded-lg border-gray-300">
                     <option value="">Pilih Nama PPTK</option>
+                    <option>Dinda Maharani</option>
                 </select>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="font-medium">Pangkat</label>
-                    <input type="text" name="pptk[pangkat]"
+                    <input type="text" name="pptk_pangkat"
                         class="w-full mt-2 rounded-lg border-gray-300">
                 </div>
                 <div>
                     <label class="font-medium">NIP</label>
-                    <input type="text" name="pptk[nip]"
+                    <input type="text" name="pptk_nip"
                         class="w-full mt-2 rounded-lg border-gray-300">
                 </div>
             </div>

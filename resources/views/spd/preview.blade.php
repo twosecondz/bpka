@@ -1,133 +1,231 @@
 <x-app-layout>
-    <div class="max-w-4xl mx-auto px-6 py-10">
+<div class="max-w-4xl mx-auto px-6 py-10 bg-white text-black">
 
-        <!-- HEADER -->
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-semibold">Preview Surat Perjalanan Dinas</h1>
+    <!-- ACTION -->
+    <div class="flex justify-between mb-8 print:hidden">
+        <a href="{{ url()->previous() }}" class="text-gray-600 hover:underline">
+            ← Kembali
+        </a>
+      <form method="POST" action="{{ route('spd.spd-pdf') }}">
+        @csrf
+        @foreach ($data as $key => $value)
+            <input type="hidden" name="{{ $key }}" value="{{ is_array($value) ? json_encode($value) : $value }}">
+        @endforeach
 
-            <a href="{{ url()->previous() }}"
-               class="border rounded-lg px-6 py-2 hover:bg-gray-100">
-                Kembali
-            </a>
-        </div>
-
-        <!-- SURAT -->
-        <div class="border rounded-2xl p-10 bg-white text-gray-800">
-
-            <!-- JUDUL -->
-            <div class="text-center mb-8">
-                <h2 class="text-lg font-bold uppercase">Surat Perjalanan Dinas (SPD)</h2>
-                <p class="mt-2">
-                    Nomor : {{ $data['nomor_spd'] ?? '-' }}
-                </p>
-            </div>
-
-            <!-- INFORMASI UMUM -->
-            <table class="w-full text-sm mb-6">
-                <tr>
-                    <td class="w-1/3 py-1">Pejabat Pembuat Komitmen</td>
-                    <td class="py-1">: {{ $data['ppk'] ?? '-' }}</td>
-                </tr>
-            </table>
-
-            <!-- DATA PEGAWAI -->
-            <h3 class="font-semibold mb-2">I. Data Pegawai</h3>
-            <table class="w-full text-sm mb-6">
-                <tr>
-                    <td class="w-1/3 py-1">Nama Pegawai</td>
-                    <td>: {{ $data['pegawai']['nama'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">NIP</td>
-                    <td>: {{ $data['pegawai']['nip'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Pangkat / Golongan</td>
-                    <td>: {{ $data['pegawai']['pangkat'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Jabatan</td>
-                    <td>: {{ $data['pegawai']['jabatan'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Tingkat Biaya</td>
-                    <td>: {{ $data['tingkat_biaya'] ?? '-' }}</td>
-                </tr>
-            </table>
-
-            <!-- DETAIL PERJALANAN -->
-            <h3 class="font-semibold mb-2">II. Detail Perjalanan Dinas</h3>
-            <table class="w-full text-sm mb-6">
-                <tr>
-                    <td class="w-1/3 py-1">Maksud Perjalanan</td>
-                    <td>: {{ $data['maksud'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Alat Transportasi</td>
-                    <td>: {{ $data['transportasi'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Tempat Tujuan</td>
-                    <td>: {{ $data['tujuan'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Tanggal Berangkat</td>
-                    <td>: {{ $data['tgl_mulai'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Tanggal Kembali</td>
-                    <td>: {{ $data['tgl_selesai'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Lama Perjalanan</td>
-                    <td>: {{ $data['lama'] ?? '-' }} hari</td>
-                </tr>
-            </table>
-
-            <!-- ANGGARAN -->
-            <h3 class="font-semibold mb-2">III. Pembebanan Anggaran</h3>
-            <table class="w-full text-sm mb-8">
-                <tr>
-                    <td class="w-1/3 py-1">Kegiatan / Sub Kegiatan</td>
-                    <td>: {{ $data['kegiatan'] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="py-1">Kode Rekening</td>
-                    <td>: {{ $data['kode_rekening'] ?? '-' }}</td>
-                </tr>
-            </table>
-
-            <!-- TANDA TANGAN -->
-            <div class="grid grid-cols-2 gap-10 mt-12 text-sm">
-                <div></div>
-
-                <div class="text-center">
-                    <p>Pejabat Pelaksana Teknis Kegiatan</p>
-                    <p class="mt-16 font-semibold">
-                        {{ $data['pptk']['nama'] ?? '-' }}
-                    </p>
-                    <p>
-                        {{ $data['pptk']['pangkat'] ?? '-' }}<br>
-                        NIP. {{ $data['pptk']['nip'] ?? '-' }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ACTION -->
-        <div class="flex justify-end gap-4 mt-8">
-            <form method="POST" action="{{ route('spd.spd-pdf') }}">
-                @csrf
-                @foreach ($data as $key => $value)
-                    <input type="hidden" name="{{ $key }}" value="{{ is_array($value) ? json_encode($value) : $value }}">
-                @endforeach
-
-                <button
-                    class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold">
-                    Simpan SPD
-                </button>
-            </form>
-        </div>
+        <button class="bg-blue-700 text-white px-6 py-2 rounded-lg">
+            Cetak PDF
+        </button>
+      </form>
 
     </div>
+
+    <!-- SURAT -->
+    <div class="p-10">
+        {{-- ================= HEADER ================= --}}
+        <table class="no-border">
+            <tr>
+                <td width="15%">
+                    <img src="{{ asset('images/logo-instansi.png') }}" width="90">
+                </td>
+                <td class="text-center">
+                    <div class="bold">PEMERINTAH ACEH</div>
+                    <div class="bold" style="font-size:14px;">BADAN PENGELOLAAN KEUANGAN ACEH</div>
+                    <div>Jln. T. Nyak Arief No. 219 Syiah Kuala, Kota Banda Aceh, 23114</div>
+                    <div>Telp. 0651-7551045 Fax. 0651-7551046</div>
+                    <div>website: bpka.acehprov.go.id | email: sandi_bpka@acehprov.go.id</div>
+                </td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <table class="no-border">
+            <tr>
+                <td width="65%"></td>
+                <td>
+                    Lembar ke :<br>
+                    Kode No :<br>
+                    Nomor : {{ $data['nomor_spd'] }}
+                </td>
+            </tr>
+        </table>
+
+        <br>
+
+        <div class="text-center bold">SURAT PERJALANAN DINAS (SPD)</div>
+
+        <br>
+
+        {{-- ================= HALAMAN 1 ================= --}}
+        <table>
+            <tr>
+                <td width="5%">1.</td>
+                <td width="35%">Pejabat Pembuat Komitmen</td>
+                <td>{{ $data['ppk'] }}</td>
+            </tr>
+
+            <tr>
+                <td>2.</td>
+                <td>Nama / NIP Pegawai</td>
+                <td>
+                    {{ $data['pegawai']['nama'] }}<br>
+                    {{ $data['pegawai']['nip'] }}
+                </td>
+            </tr>
+
+            <tr>
+                <td rowspan="3">3.</td>
+                <td>a. Pangkat dan Golongan</td>
+                <td>{{ $data['pegawai']['pangkat'] }}</td>
+            </tr>
+            <tr>
+                <td>b. Jabatan / Instansi</td>
+                <td>{{ $data['pegawai']['jabatan'] }}</td>
+            </tr>
+            <tr>
+                <td>c. Tingkat Biaya Perjalanan Dinas</td>
+                <td>{{ $data['tingkat_biaya'] }}</td>
+            </tr>
+
+            <tr>
+                <td>4.</td>
+                <td>Maksud Perjalanan Dinas</td>
+                <td>{{ $data['maksud'] }}</td>
+            </tr>
+
+            <tr>
+                <td>5.</td>
+                <td>Alat Angkutan yang Dipergunakan</td>
+                <td>{{ $data['transportasi'] }}</td>
+            </tr>
+
+            <tr>
+                <td rowspan="2">6.</td>
+                <td>a. Tempat Berangkat</td>
+                <td> Banda Aceh </td>
+            </tr>
+            <tr>
+                <td>b. Tempat Tujuan</td>
+                <td>{{ $data['tujuan'] }}</td>
+            </tr>
+
+            <tr>
+                <td rowspan="3">7.</td>
+                <td>a. Lamanya Perjalanan Dinas</td>
+                <td>{{ $data['lama'] }} Hari</td>
+            </tr>
+            <tr>
+                <td>b. Tanggal Berangkat</td>
+                <td>{{ $data['tgl_mulai'] }}</td>
+            </tr>
+            <tr>
+                <td>c. Tanggal Kembali</td>
+                <td>{{ $data['tgl_selesai'] }}</td>
+            </tr>
+
+            <tr>
+                <td>8.</td>
+                <td>Pengikut</td>
+                <td>-</td>
+            </tr>
+
+            <tr>
+                <td rowspan="2">9.</td>
+                <td>a. Kegiatan / Instansi</td>
+                <td>{{ $data['kegiatan'] }}</td>
+            </tr>
+            <tr>
+                <td>b. Akun / Kode Rekening</td>
+                <td>{{ $data['kode_rekening'] }}</td>
+            </tr>
+
+            <tr>
+                <td>10.</td>
+                <td>Keterangan lain-lain</td>
+                <td>-</td>
+            </tr>
+        </table>
+
+        <br><br>
+
+        <table class="no-border">
+            <tr>
+                <td width="60%"></td>
+                <td class="text-center">
+                    Dikeluarkan di Banda Aceh<br>
+                    Tanggal {{ $data['tgl_mulai'] }}<br><br>
+                    Pejabat Pelaksana Teknis Kegiatan<br>
+                    Badan Pengelolaan Keuangan Aceh<br><br><br>
+                    <u>{{ $data['pptk']}}</u><br>
+                    {{ $data['pptk_pangkat'] }}<br>
+                    NIP. {{ $data['pptk_nip'] }}
+                </td>
+            </tr>
+        </table>
+
+        <div class="page-break"></div>
+
+        {{-- ================= HALAMAN 2 ================= --}}
+        <table>
+            <tr>
+                <td width="50%">
+                    <b>I.</b> Berangkat dari<br>
+                    (Tempat Kedudukan)<br>
+                    Ke<br>
+                    Pada Tanggal
+                </td>
+                <td>
+                    : Banda Aceh<br><br>
+                    : {{ $data['tujuan'] }}<br>
+                    : {{ $data['tgl_mulai'] }}<br><br>
+                    Pejabat Pelaksana Teknis Kegiatan<br><br>
+                    <u>{{ $data['pptk'] }}</u><br>
+                    {{ $data['pptk_pangkat'] }}<br>
+                    NIP. {{ $data['pptk_nip'] }}
+                </td>
+            </tr>
+
+            @for ($i = 2; $i <= 6; $i++)
+            <tr>
+                <td>
+                    <b>{{ $i }}.</b> Tiba di<br>
+                    Pada Tanggal<br>
+                    Kepala
+                </td>
+                <td>
+                    Berangkat dari :<br>
+                    Ke :<br>
+                    Pada Tanggal :<br>
+                    Kepala :
+                </td>
+            </tr>
+            @endfor
+
+            <tr>
+                <td colspan="2">
+                    <b>VII. CATATAN LAIN-LAIN</b><br>
+                    <b>PERHATIAN :</b><br>
+                    PPK/PPTK yang menerbitkan SPD, pegawai yang melakukan perjalanan dinas,
+                    para pejabat yang mengesahkan tanggal berangkat/tiba, serta bendahara
+                    bertanggung jawab berdasarkan peraturan keuangan negara.
+                </td>
+            </tr>
+        </table>
+
+        <br><br>
+
+        <table class="no-border">
+            <tr>
+                <td width="60%"></td>
+                <td class="text-center">
+                    Pejabat Pelaksana Teknis Kegiatan<br>
+                    Badan Pengelolaan Keuangan Aceh<br><br><br>
+                    <u>{{ $data['pptk'] }}</u><br>
+                    {{ $data['pptk_pangkat']}}<br>
+                    NIP. {{ $data['pptk_nip'] }}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 </x-app-layout>

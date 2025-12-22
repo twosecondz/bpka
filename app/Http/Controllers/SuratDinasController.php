@@ -23,9 +23,13 @@ class SuratDinasController extends Controller
         $data['pegawai'] = json_decode($data['pegawai'], true);
     }
 
-    $pdf = Pdf::loadView('spd.spd-pdf', [
-        'data' => $data
-    ])->setPaper('A4', 'portrait');
+    // $pdf = Pdf::loadView('spd.spd-pdf', [
+    //     'data' => $data
+    // ])->setPaper('A4', 'portrait');
+    //  $pdf = Pdf::loadView('spd.preview', compact('data'))->setPaper('A4');
+    $pdf = Pdf::loadView('spd.spd-pdf', compact('data'))
+            ->setPaper('A4', 'portrait');
+
 
     return $pdf->stream('Surat-SPD.pdf');
 }
